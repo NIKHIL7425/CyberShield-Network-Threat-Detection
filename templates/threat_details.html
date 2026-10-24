@@ -1,0 +1,2024 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Threat Details - CyberShield
+    </title>
+
+
+    <style>
+
+        /* ==========================================
+           Global
+        ========================================== */
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+
+            margin: 0;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background: #070d1c;
+
+            color: #f1f5f9;
+
+        }
+
+
+        /* ==========================================
+           Main Dashboard Layout
+        ========================================== */
+
+        .dashboard {
+
+            display: flex;
+
+            min-height: 100vh;
+
+        }
+
+
+        /* ==========================================
+           Sidebar
+        ========================================== */
+
+        .sidebar {
+
+            position: fixed;
+
+            left: 0;
+            top: 0;
+            bottom: 0;
+
+            width: 315px;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    #0d172b 0%,
+                    #091223 100%
+                );
+
+            border-right:
+                1px solid #1e3150;
+
+            padding: 35px 22px;
+
+            z-index: 100;
+
+        }
+
+
+        .sidebar-title {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            padding-left: 18px;
+
+            margin-bottom: 45px;
+
+            color: #f8fafc;
+
+            font-size: 28px;
+
+            font-weight: 700;
+
+        }
+
+
+        .sidebar-title::before {
+
+            content: "🛡️";
+
+            font-size: 27px;
+
+        }
+
+
+        .nav-item {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 14px;
+
+            padding: 17px 18px;
+
+            margin-bottom: 8px;
+
+            border-radius: 10px;
+
+            color: #91a4c0;
+
+            text-decoration: none;
+
+            font-size: 18px;
+
+            font-weight: 500;
+
+            transition:
+                background 0.2s ease,
+                color 0.2s ease;
+
+        }
+
+
+        .nav-item::before {
+
+            content: "›";
+
+            font-size: 23px;
+
+            color: #527096;
+
+        }
+
+
+        .nav-item:hover {
+
+            background: #14233c;
+
+            color: #ffffff;
+
+        }
+
+
+        .nav-item.active {
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #2563eb,
+                    #347bf2
+                );
+
+            color: #ffffff;
+
+            box-shadow:
+                0 8px 20px
+                rgba(37, 99, 235, 0.22);
+
+        }
+
+
+        .nav-item.active::before {
+
+            color: #ffffff;
+
+        }
+
+
+        /* ==========================================
+           Main Content
+        ========================================== */
+
+        .main-content {
+
+            width: calc(100% - 315px);
+
+            margin-left: 315px;
+
+            padding: 45px 45px 60px;
+
+        }
+
+
+        /* ==========================================
+           Page Header
+        ========================================== */
+
+        .page-header {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            gap: 25px;
+
+            margin-bottom: 35px;
+
+        }
+
+
+        .page-title {
+
+            margin: 0;
+
+            color: #f8fafc;
+
+            font-size: 38px;
+
+            font-weight: 700;
+
+            letter-spacing: -0.5px;
+
+        }
+
+
+        .page-subtitle {
+
+            margin-top: 9px;
+
+            color: #8fa2bd;
+
+            font-size: 18px;
+
+        }
+
+
+        /* ==========================================
+           Back Button
+        ========================================== */
+
+        .back-button {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            padding: 14px 20px;
+
+            border-radius: 9px;
+
+            border:
+                1px solid #294263;
+
+            background: #182943;
+
+            color: #f1f5f9;
+
+            text-decoration: none;
+
+            font-size: 15px;
+
+            font-weight: 600;
+
+            transition: 0.2s ease;
+
+        }
+
+
+        .back-button:hover {
+
+            background: #223755;
+
+            border-color: #3b82f6;
+
+        }
+
+
+        /* ==========================================
+           Cards
+        ========================================== */
+
+        .details-card {
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #111d32,
+                    #0d182b
+                );
+
+            border:
+                1px solid #213653;
+
+            border-radius: 16px;
+
+            padding: 32px;
+
+            margin-bottom: 25px;
+
+            box-shadow:
+                0 12px 30px
+                rgba(0, 0, 0, 0.18);
+
+        }
+
+
+        .card-title {
+
+            margin: 0 0 26px;
+
+            color: #f1f5f9;
+
+            font-size: 26px;
+
+            font-weight: 700;
+
+        }
+
+
+        /* ==========================================
+           Threat Information Grid
+        ========================================== */
+
+        .details-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+
+            gap: 20px;
+
+        }
+
+
+        .detail-item {
+
+            min-height: 110px;
+
+            padding: 21px;
+
+            border-radius: 12px;
+
+            background: #101c30;
+
+            border:
+                1px solid #243b5b;
+
+            transition: 0.2s ease;
+
+        }
+
+
+        .detail-item:hover {
+
+            border-color: #31547c;
+
+            background: #13223a;
+
+        }
+
+
+        .detail-label {
+
+            display: block;
+
+            margin-bottom: 10px;
+
+            color: #8ea2bf;
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.4px;
+
+        }
+
+
+        .detail-value {
+
+            color: #f1f5f9;
+
+            font-size: 19px;
+
+            font-weight: 650;
+
+            word-break: break-word;
+
+        }
+
+
+        /* ==========================================
+           Threat Type
+        ========================================== */
+
+        .threat-type {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            padding: 7px 13px;
+
+            border-radius: 7px;
+
+            background: #1a2a42;
+
+            border:
+                1px solid #304968;
+
+            color: #a9bad1;
+
+            font-size: 14px;
+
+            font-weight: 700;
+
+        }
+
+
+        /* ==========================================
+           Severity
+        ========================================== */
+
+        .severity-badge {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            padding: 7px 14px;
+
+            border-radius: 7px;
+
+            font-size: 14px;
+
+            font-weight: 700;
+
+        }
+
+
+        .severity-critical {
+
+            background: #3b1720;
+
+            color: #ff6b7f;
+
+            border:
+                1px solid #71303d;
+
+        }
+
+
+        .severity-high {
+
+            background: #3b1e18;
+
+            color: #ff8a4c;
+
+            border:
+                1px solid #73402d;
+
+        }
+
+
+        .severity-medium {
+
+            background: #3a2b0c;
+
+            color: #ffc229;
+
+            border:
+                1px solid #6e5419;
+
+        }
+
+
+        .severity-low {
+
+            background: #123324;
+
+            color: #4ade80;
+
+            border:
+                1px solid #235d40;
+
+        }
+
+
+        /* ==========================================
+           Monitoring Status
+        ========================================== */
+
+        .status-box {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 11px;
+
+            padding: 13px 16px;
+
+            border-radius: 9px;
+
+            background: #11294a;
+
+            border:
+                1px solid #214d83;
+
+            color: #5d91ff;
+
+            font-weight: 700;
+
+        }
+
+
+        .status-dot {
+
+            width: 10px;
+
+            height: 10px;
+
+            border-radius: 50%;
+
+            background: #3b82f6;
+
+            box-shadow:
+                0 0 10px
+                rgba(59, 130, 246, 0.6);
+
+        }
+
+
+        /* ==========================================
+           Detection Details
+        ========================================== */
+
+        .description-box {
+
+            padding: 21px 23px;
+
+            min-height: 75px;
+
+            border-radius: 10px;
+
+            border-left:
+                4px solid #3b82f6;
+
+            background: #0e1a2e;
+
+            color: #b5c4d8;
+
+            font-size: 17px;
+
+            line-height: 1.7;
+
+        }
+
+
+        /* ==========================================
+           Packet Summary
+        ========================================== */
+
+        .packet-summary {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 20px;
+
+            margin-bottom: 24px;
+
+        }
+
+
+        .packet-count {
+
+            padding: 9px 14px;
+
+            border-radius: 8px;
+
+            background: #16263e;
+
+            color: #8fa7c7;
+
+            font-size: 15px;
+
+            font-weight: 700;
+
+            white-space: nowrap;
+
+        }
+
+
+        /* ==========================================
+           Packet Table
+        ========================================== */
+
+        .packet-table-container {
+
+            width: 100%;
+
+            overflow-x: auto;
+
+            border:
+                1px solid #1e3452;
+
+            border-radius: 11px;
+
+        }
+
+
+        .packet-table {
+
+            width: 100%;
+
+            min-width: 1050px;
+
+            border-collapse: collapse;
+
+        }
+
+
+        .packet-table th {
+
+            padding: 16px 14px;
+
+            text-align: left;
+
+            background: #091426;
+
+            border-bottom:
+                1px solid #213653;
+
+            color: #8297b5;
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.4px;
+
+        }
+
+
+        .packet-table td {
+
+            padding: 17px 14px;
+
+            background: #101c30;
+
+            border-bottom:
+                1px solid #1b304b;
+
+            color: #b7c5d8;
+
+            font-size: 14px;
+
+            white-space: nowrap;
+
+        }
+
+
+        .packet-table tbody tr:hover td {
+
+            background: #14233b;
+
+        }
+
+
+        .packet-table tbody tr:last-child td {
+
+            border-bottom: none;
+
+        }
+
+
+        /* ==========================================
+           Protocol Badge
+        ========================================== */
+
+        .protocol-badge {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            min-width: 55px;
+
+            padding: 6px 10px;
+
+            border-radius: 6px;
+
+            background: #17264b;
+
+            border:
+                1px solid #304b88;
+
+            color: #6ea0ff;
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+        }
+
+
+        /* ==========================================
+           Show More Button
+        ========================================== */
+
+        .show-more-container {
+
+            display: flex;
+
+            justify-content: center;
+
+            margin-top: 25px;
+
+        }
+
+
+        .show-more-button {
+
+            border: none;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #2563eb,
+                    #347bf2
+                );
+
+            color: #ffffff;
+
+            padding: 13px 28px;
+
+            border-radius: 9px;
+
+            font-size: 16px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition:
+                background 0.2s ease,
+                transform 0.2s ease,
+                box-shadow 0.2s ease;
+
+        }
+
+
+        .show-more-button:hover {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #1d4ed8,
+                    #2563eb
+                );
+
+            transform: translateY(-1px);
+
+            box-shadow:
+                0 8px 20px
+                rgba(37, 99, 235, 0.25);
+
+        }
+
+
+        .show-more-button:active {
+
+            transform: translateY(0);
+
+        }
+
+
+        /* ==========================================
+           No Packets
+        ========================================== */
+
+        .no-packets {
+
+            text-align: center;
+
+            padding: 40px 20px;
+
+            border-radius: 10px;
+
+            background: #101c30;
+
+            border:
+                1px solid #243b5b;
+
+            color: #8297b5;
+
+            font-size: 15px;
+
+        }
+
+
+        /* ==========================================
+           Loading
+        ========================================== */
+
+        .loading {
+
+            text-align: center;
+
+            padding: 50px;
+
+            color: #8297b5;
+
+            font-size: 16px;
+
+        }
+
+
+        /* ==========================================
+           Error
+        ========================================== */
+
+        .error-message {
+
+            display: none;
+
+            padding: 18px;
+
+            margin-bottom: 20px;
+
+            border-radius: 10px;
+
+            background: #361923;
+
+            border:
+                1px solid #71303d;
+
+            color: #ff7587;
+
+            font-weight: 600;
+
+        }
+
+
+        /* ==========================================
+           Scrollbar
+        ========================================== */
+
+        ::-webkit-scrollbar {
+
+            width: 9px;
+
+            height: 9px;
+
+        }
+
+
+        ::-webkit-scrollbar-track {
+
+            background: #08101f;
+
+        }
+
+
+        ::-webkit-scrollbar-thumb {
+
+            background: #243b5b;
+
+            border-radius: 10px;
+
+        }
+
+
+        ::-webkit-scrollbar-thumb:hover {
+
+            background: #35567d;
+
+        }
+
+
+        /* ==========================================
+           Responsive
+        ========================================== */
+
+        @media (max-width: 1000px) {
+
+            .sidebar {
+
+                width: 250px;
+
+            }
+
+
+            .main-content {
+
+                width: calc(100% - 250px);
+
+                margin-left: 250px;
+
+                padding: 35px 25px;
+
+            }
+
+
+            .details-grid {
+
+                grid-template-columns: 1fr;
+
+            }
+
+        }
+
+
+        @media (max-width: 700px) {
+
+            .dashboard {
+
+                display: block;
+
+            }
+
+
+            .sidebar {
+
+                position: relative;
+
+                width: 100%;
+
+                min-height: auto;
+
+                padding: 20px;
+
+            }
+
+
+            .sidebar-title {
+
+                margin-bottom: 20px;
+
+            }
+
+
+            .main-content {
+
+                width: 100%;
+
+                margin-left: 0;
+
+                padding: 25px 18px;
+
+            }
+
+
+            .page-header {
+
+                flex-direction: column;
+
+                align-items: flex-start;
+
+            }
+
+
+            .page-title {
+
+                font-size: 30px;
+
+            }
+
+
+            .details-card {
+
+                padding: 22px;
+
+            }
+
+
+            .packet-summary {
+
+                flex-direction: column;
+
+                align-items: flex-start;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="dashboard">
+
+
+    <!-- ==========================================
+         Sidebar
+    ========================================== -->
+
+    <aside class="sidebar">
+
+        <div class="sidebar-title">
+            CyberShield
+        </div>
+
+
+        <a
+            href="/"
+            class="nav-item"
+        >
+            Dashboard
+        </a>
+
+
+        <a
+            href="/live-traffic"
+            class="nav-item"
+        >
+            Live Traffic
+        </a>
+
+
+        <a
+            href="/threats"
+            class="nav-item active"
+        >
+            Threats
+        </a>
+
+
+        <a
+            href="/reports"
+            class="nav-item"
+        >
+            Reports
+        </a>
+
+
+        <a
+            href="/settings"
+            class="nav-item"
+        >
+            Settings
+        </a>
+
+    </aside>
+
+
+    <!-- ==========================================
+         Main Content
+    ========================================== -->
+
+    <main class="main-content">
+
+
+        <!-- ======================================
+             Header
+        ====================================== -->
+
+        <div class="page-header">
+
+            <div>
+
+                <h1 class="page-title">
+                    Threat Details
+                </h1>
+
+                <div class="page-subtitle">
+                    Detailed information about the detected network threat
+                </div>
+
+            </div>
+
+
+            <a
+                href="/threats"
+                class="back-button"
+            >
+                ← Back to Threats
+            </a>
+
+        </div>
+
+
+        <!-- ======================================
+             Error
+        ====================================== -->
+
+        <div
+            id="errorMessage"
+            class="error-message"
+        >
+            Unable to load threat details.
+        </div>
+
+
+        <!-- ======================================
+             Loading
+        ====================================== -->
+
+        <div
+            id="loadingMessage"
+            class="details-card loading"
+        >
+            Loading threat details...
+        </div>
+
+
+        <!-- ======================================
+             Threat Content
+        ====================================== -->
+
+        <div
+            id="threatContent"
+            style="display: none;"
+        >
+
+
+            <!-- ==================================
+                 Threat Information
+            ================================== -->
+
+            <div class="details-card">
+
+                <h2 class="card-title">
+                    Threat Information
+                </h2>
+
+
+                <div class="details-grid">
+
+
+                    <!-- Threat ID -->
+
+                    <div class="detail-item">
+
+                        <span class="detail-label">
+                            Threat ID
+                        </span>
+
+                        <div
+                            id="threatId"
+                            class="detail-value"
+                        >
+                            -
+                        </div>
+
+                    </div>
+
+
+                    <!-- Threat Type -->
+
+                    <div class="detail-item">
+
+                        <span class="detail-label">
+                            Threat Type
+                        </span>
+
+                        <div
+                            id="threatType"
+                            class="detail-value"
+                        >
+                            -
+                        </div>
+
+                    </div>
+
+
+                    <!-- Source IP -->
+
+                    <div class="detail-item">
+
+                        <span class="detail-label">
+                            Source IP
+                        </span>
+
+                        <div
+                            id="sourceIP"
+                            class="detail-value"
+                        >
+                            -
+                        </div>
+
+                    </div>
+
+
+                    <!-- Severity -->
+
+                    <div class="detail-item">
+
+                        <span class="detail-label">
+                            Severity
+                        </span>
+
+                        <div
+                            id="severity"
+                            class="detail-value"
+                        >
+                            -
+                        </div>
+
+                    </div>
+
+
+                    <!-- Detection Time -->
+
+                    <div class="detail-item">
+
+                        <span class="detail-label">
+                            Detection Time
+                        </span>
+
+                        <div
+                            id="detectionTime"
+                            class="detail-value"
+                        >
+                            -
+                        </div>
+
+                    </div>
+
+
+                    <!-- Monitoring Status -->
+
+                    <div class="detail-item">
+
+                        <span class="detail-label">
+                            Monitoring Status
+                        </span>
+
+                        <div class="status-box">
+
+                            <span class="status-dot"></span>
+
+                            Threat Recorded
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ==================================
+                 Detection Details
+            ================================== -->
+
+            <div class="details-card">
+
+                <h2 class="card-title">
+                    Detection Details
+                </h2>
+
+
+                <div
+                    id="threatDetails"
+                    class="description-box"
+                >
+                    No additional details available.
+                </div>
+
+            </div>
+
+
+            <!-- ==================================
+                 Related Network Activity
+            ================================== -->
+
+            <div class="details-card">
+
+
+                <div class="packet-summary">
+
+                    <h2 class="card-title">
+                        Related Network Activity
+                    </h2>
+
+
+                    <div
+                        id="packetCount"
+                        class="packet-count"
+                    >
+                        Loading packets...
+                    </div>
+
+                </div>
+
+
+                <!-- Packet Loading -->
+
+                <div
+                    id="packetLoading"
+                    class="loading"
+                >
+                    Loading related packets...
+                </div>
+
+
+                <!-- Packet Table -->
+
+                <div
+                    id="packetTableContainer"
+                    class="packet-table-container"
+                    style="display: none;"
+                >
+
+                    <table class="packet-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Source IP
+                                </th>
+
+                                <th>
+                                    Destination IP
+                                </th>
+
+                                <th>
+                                    Protocol
+                                </th>
+
+                                <th>
+                                    Source Port
+                                </th>
+
+                                <th>
+                                    Destination Port
+                                </th>
+
+                                <th>
+                                    Packet Size
+                                </th>
+
+                                <th>
+                                    TCP Flags
+                                </th>
+
+                                <th>
+                                    Timestamp
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody
+                            id="packetTableBody"
+                        >
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+                <!-- ==================================
+                     Show More
+                ================================== -->
+
+                <div
+                    id="showMoreContainer"
+                    class="show-more-container"
+                    style="display: none;"
+                >
+
+                    <button
+                        type="button"
+                        id="showMoreButton"
+                        class="show-more-button"
+                        onclick="showMorePackets()"
+                    >
+                        Show More
+                    </button>
+
+                </div>
+
+
+                <!-- No Packets -->
+
+                <div
+                    id="noPackets"
+                    class="no-packets"
+                    style="display: none;"
+                >
+                    No related packets were found for this threat.
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<script>
+
+    // ==========================================
+    // Get Threat ID From URL
+    // ==========================================
+
+    const urlParams =
+        new URLSearchParams(
+            window.location.search
+        );
+
+
+    const threatId =
+        urlParams.get("id");
+
+
+    // ==========================================
+    // Packet Pagination
+    // ==========================================
+
+    let relatedPackets = [];
+
+    let packetsDisplayed = 0;
+
+    const PACKETS_PER_LOAD = 10;
+
+
+    // ==========================================
+    // Severity CSS Class
+    // ==========================================
+
+    function getSeverityClass(
+        severity
+    ) {
+
+        if (!severity) {
+
+            return "severity-medium";
+
+        }
+
+
+        const level =
+            severity.toLowerCase();
+
+
+        if (
+            level === "critical"
+        ) {
+
+            return "severity-critical";
+
+        }
+
+
+        if (
+            level === "high"
+        ) {
+
+            return "severity-high";
+
+        }
+
+
+        if (
+            level === "low"
+        ) {
+
+            return "severity-low";
+
+        }
+
+
+        return "severity-medium";
+
+    }
+
+
+    // ==========================================
+    // Load Threat Details
+    // ==========================================
+
+    async function loadThreatDetails() {
+
+        try {
+
+
+            if (!threatId) {
+
+                throw new Error(
+                    "Threat ID is missing."
+                );
+
+            }
+
+
+            const response =
+                await fetch(
+                    "/api/threat/" +
+                    encodeURIComponent(
+                        threatId
+                    )
+                );
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Threat not found."
+                );
+
+            }
+
+
+            const threat =
+                await response.json();
+
+
+            // Threat ID
+
+            document.getElementById(
+                "threatId"
+            ).textContent =
+                threat.id || "-";
+
+
+            // Source IP
+
+            document.getElementById(
+                "sourceIP"
+            ).textContent =
+                threat.source_ip || "-";
+
+
+            // Detection Time
+
+            document.getElementById(
+                "detectionTime"
+            ).textContent =
+                threat.timestamp || "-";
+
+
+            // Threat Type
+
+            document.getElementById(
+                "threatType"
+            ).innerHTML = `
+
+                <span class="threat-type">
+
+                    ${
+                        threat.threat_type
+                        || "Unknown"
+                    }
+
+                </span>
+
+            `;
+
+
+            // Severity
+
+            document.getElementById(
+                "severity"
+            ).innerHTML = `
+
+                <span
+                    class="severity-badge ${
+                        getSeverityClass(
+                            threat.severity
+                        )
+                    }"
+                >
+
+                    ${
+                        threat.severity
+                        || "Medium"
+                    }
+
+                </span>
+
+            `;
+
+
+            // Detection Details
+
+            document.getElementById(
+                "threatDetails"
+            ).textContent =
+
+                threat.details
+                ||
+                "No additional details available.";
+
+
+            // Hide Loading
+
+            document.getElementById(
+                "loadingMessage"
+            ).style.display =
+                "none";
+
+
+            // Show Content
+
+            document.getElementById(
+                "threatContent"
+            ).style.display =
+                "block";
+
+
+            // Load Packets
+
+            loadRelatedPackets();
+
+        }
+
+
+        catch (error) {
+
+            console.error(
+                "Error loading threat:",
+                error
+            );
+
+
+            document.getElementById(
+                "loadingMessage"
+            ).style.display =
+                "none";
+
+
+            document.getElementById(
+                "errorMessage"
+            ).style.display =
+                "block";
+
+
+            document.getElementById(
+                "errorMessage"
+            ).textContent =
+                error.message
+                ||
+                "Unable to load threat details.";
+
+        }
+
+    }
+
+
+    // ==========================================
+    // Display Related Packets
+    // ==========================================
+
+    function displayPackets() {
+
+        const tableBody =
+            document.getElementById(
+                "packetTableBody"
+            );
+
+
+        const start =
+            packetsDisplayed;
+
+
+        const end =
+            Math.min(
+                start + PACKETS_PER_LOAD,
+                relatedPackets.length
+            );
+
+
+        for (
+            let i = start;
+            i < end;
+            i++
+        ) {
+
+            const packet =
+                relatedPackets[i];
+
+
+            const row =
+                document.createElement(
+                    "tr"
+                );
+
+
+            row.innerHTML = `
+
+                <td>
+                    ${
+                        packet.source_ip
+                        || "-"
+                    }
+                </td>
+
+                <td>
+                    ${
+                        packet.destination_ip
+                        || "-"
+                    }
+                </td>
+
+                <td>
+
+                    <span
+                        class="protocol-badge"
+                    >
+
+                        ${
+                            packet.protocol
+                            || "-"
+                        }
+
+                    </span>
+
+                </td>
+
+                <td>
+                    ${
+                        packet.source_port
+                        || "-"
+                    }
+                </td>
+
+                <td>
+                    ${
+                        packet.destination_port
+                        || "-"
+                    }
+                </td>
+
+                <td>
+                    ${
+                        packet.packet_size
+                        || "-"
+                    }
+                    bytes
+                </td>
+
+                <td>
+                    ${
+                        packet.tcp_flags
+                        || "-"
+                    }
+                </td>
+
+                <td>
+                    ${
+                        packet.timestamp
+                        || "-"
+                    }
+                </td>
+
+            `;
+
+
+            tableBody.appendChild(
+                row
+            );
+
+        }
+
+
+        packetsDisplayed =
+            end;
+
+
+        updateShowMoreButton();
+
+    }
+
+
+    // ==========================================
+    // Show More Packets
+    // ==========================================
+
+    function showMorePackets() {
+
+        displayPackets();
+
+    }
+
+
+    // ==========================================
+    // Update Show More Button
+    // ==========================================
+
+    function updateShowMoreButton() {
+
+        const container =
+            document.getElementById(
+                "showMoreContainer"
+            );
+
+
+        const button =
+            document.getElementById(
+                "showMoreButton"
+            );
+
+
+        if (
+            packetsDisplayed <
+            relatedPackets.length
+        ) {
+
+            container.style.display =
+                "flex";
+
+
+            const remaining =
+                relatedPackets.length -
+                packetsDisplayed;
+
+
+            button.textContent =
+                `Show More (${remaining} remaining)`;
+
+        }
+
+        else {
+
+            container.style.display =
+                "none";
+
+        }
+
+    }
+
+
+    // ==========================================
+    // Load Related Packets
+    // ==========================================
+
+    async function loadRelatedPackets() {
+
+        try {
+
+
+            const response =
+                await fetch(
+                    "/api/threat/" +
+                    encodeURIComponent(
+                        threatId
+                    ) +
+                    "/packets"
+                );
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Unable to load related packets."
+                );
+
+            }
+
+
+            const data =
+                await response.json();
+
+
+            relatedPackets =
+                data.packets || [];
+
+
+            packetsDisplayed = 0;
+
+
+            // Packet Count
+
+            document.getElementById(
+                "packetCount"
+            ).textContent =
+
+                relatedPackets.length +
+
+                (
+                    relatedPackets.length === 1
+                        ? " packet found"
+                        : " packets found"
+                );
+
+
+            // Hide Loading
+
+            document.getElementById(
+                "packetLoading"
+            ).style.display =
+                "none";
+
+
+            // No Packets
+
+            if (
+                relatedPackets.length === 0
+            ) {
+
+                document.getElementById(
+                    "noPackets"
+                ).style.display =
+                    "block";
+
+                document.getElementById(
+                    "showMoreContainer"
+                ).style.display =
+                    "none";
+
+                return;
+
+            }
+
+
+            // Table Body
+
+            const tableBody =
+                document.getElementById(
+                    "packetTableBody"
+                );
+
+
+            tableBody.innerHTML = "";
+
+
+            // Display first 10 packets
+
+            displayPackets();
+
+
+            // Show Table
+
+            document.getElementById(
+                "packetTableContainer"
+            ).style.display =
+                "block";
+
+        }
+
+
+        catch (error) {
+
+            console.error(
+                "Error loading packets:",
+                error
+            );
+
+
+            document.getElementById(
+                "packetLoading"
+            ).style.display =
+                "none";
+
+
+            document.getElementById(
+                "noPackets"
+            ).style.display =
+                "block";
+
+
+            document.getElementById(
+                "showMoreContainer"
+            ).style.display =
+                "none";
+
+
+            document.getElementById(
+                "noPackets"
+            ).textContent =
+                "Unable to load related network activity.";
+
+        }
+
+    }
+
+
+    // ==========================================
+    // Initial Load
+    // ==========================================
+
+    loadThreatDetails();
+
+</script>
+
+
+</body>
+
+</html>

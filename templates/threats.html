@@ -1,0 +1,2481 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Threats - CyberShield</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+
+        /* =========================================================
+           CYBERSHIELD THREATS PAGE
+        ========================================================= */
+
+        :root {
+
+            --bg-main: #080f1f;
+            --bg-card: #111c32;
+            --bg-card-dark: #0e182b;
+            --bg-table: #0b1426;
+
+            --border: #223252;
+
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+
+            --blue: #3b82f6;
+            --green: #22c55e;
+            --orange: #f97316;
+            --yellow: #f59e0b;
+            --red: #ef4444;
+            --purple: #a78bfa;
+
+        }
+
+
+        /* =========================================================
+           PAGE
+        ========================================================= */
+
+        body {
+
+            margin: 0;
+
+            background:
+                radial-gradient(
+                    circle at top right,
+                    rgba(37, 99, 235, 0.08),
+                    transparent 35%
+                ),
+                var(--bg-main);
+
+            color: var(--text-primary);
+
+            font-family:
+                Inter,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
+
+        }
+
+
+        .dashboard {
+
+            min-height: 100vh;
+
+            display: flex;
+
+            background: var(--bg-main);
+
+        }
+
+
+        /* =========================================================
+           SIDEBAR
+        ========================================================= */
+
+        .sidebar {
+
+            width: 255px;
+
+            min-width: 255px;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    #0d172a 0%,
+                    #0a1324 100%
+                );
+
+            border-right: 1px solid var(--border);
+
+            padding: 26px 18px;
+
+            box-sizing: border-box;
+
+            position: sticky;
+
+            top: 0;
+
+            height: 100vh;
+
+        }
+
+
+        .sidebar-brand {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            margin: 0 10px 38px;
+
+            color: #f8fafc;
+
+        }
+
+
+        .sidebar-logo {
+
+            width: 38px;
+
+            height: 38px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            border-radius: 10px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #2563eb,
+                    #3b82f6
+                );
+
+            color: white;
+
+            font-size: 20px;
+
+            box-shadow:
+                0 8px 22px rgba(37, 99, 235, 0.25);
+
+        }
+
+
+        .sidebar-brand-text {
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 2px;
+
+        }
+
+
+        .sidebar-brand-text strong {
+
+            font-size: 18px;
+
+            font-weight: 700;
+
+            letter-spacing: -0.3px;
+
+            line-height: 1.1;
+
+        }
+
+
+        .sidebar-brand-text span {
+
+            color: #64748b;
+
+            font-size: 10px;
+
+            font-weight: 600;
+
+            text-transform: uppercase;
+
+            letter-spacing: 1px;
+
+        }
+
+
+        .sidebar nav {
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 7px;
+
+        }
+
+
+        .sidebar nav a {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 13px;
+
+            min-height: 48px;
+
+            padding: 0 14px;
+
+            box-sizing: border-box;
+
+            border-radius: 10px;
+
+            color: #94a3b8;
+
+            text-decoration: none;
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+            transition:
+                background 0.2s ease,
+                color 0.2s ease,
+                transform 0.2s ease;
+
+        }
+
+
+        .nav-icon {
+
+            width: 20px;
+
+            height: 20px;
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            flex-shrink: 0;
+
+            color: #64748b;
+
+            font-size: 17px;
+
+            transition:
+                color 0.2s ease,
+                transform 0.2s ease;
+
+        }
+
+
+        .sidebar nav a:hover {
+
+            background: rgba(59, 130, 246, 0.10);
+
+            color: #dbeafe;
+
+        }
+
+
+        .sidebar nav a:hover .nav-icon {
+
+            color: #60a5fa;
+
+            transform: translateX(1px);
+
+        }
+
+
+        .sidebar nav a.active {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #2563eb,
+                    #3b82f6
+                );
+
+            color: white;
+
+            box-shadow:
+                0 8px 25px rgba(37, 99, 235, 0.22);
+
+        }
+
+
+        .sidebar nav a.active .nav-icon {
+
+            color: white;
+
+        }
+
+
+        /* =========================================================
+           MAIN CONTENT
+        ========================================================= */
+
+        .main-content {
+
+            flex: 1;
+
+            min-width: 0;
+
+            padding: 32px 38px 50px;
+
+            box-sizing: border-box;
+
+        }
+
+
+        /* =========================================================
+           HEADER
+        ========================================================= */
+
+        header {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            gap: 20px;
+
+            margin-bottom: 30px;
+
+        }
+
+
+        header h1 {
+
+            margin: 0;
+
+            font-size: 30px;
+
+            font-weight: 700;
+
+            color: #f8fafc;
+
+            letter-spacing: -0.8px;
+
+        }
+
+
+        header p {
+
+            margin: 7px 0 0;
+
+            color: var(--text-secondary);
+
+            font-size: 15px;
+
+        }
+
+
+        /* =========================================================
+           STATUS
+        ========================================================= */
+
+        .status {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 9px;
+
+            padding: 11px 17px;
+
+            border-radius: 30px;
+
+            background:
+                rgba(34, 197, 94, 0.07);
+
+            border:
+                1px solid rgba(34, 197, 94, 0.25);
+
+            color: #cbd5e1;
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+            white-space: nowrap;
+
+        }
+
+
+        .status-dot {
+
+            width: 9px;
+
+            height: 9px;
+
+            border-radius: 50%;
+
+            background: var(--green);
+
+            display: inline-block;
+
+            box-shadow:
+                0 0 10px rgba(34, 197, 94, 0.8);
+
+        }
+
+
+        /* =========================================================
+           STATISTICS CARDS
+        ========================================================= */
+
+        .cards {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, minmax(0, 1fr));
+
+            gap: 17px;
+
+            margin-bottom: 22px;
+
+        }
+
+
+        .card {
+
+            position: relative;
+
+            overflow: hidden;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #121e34,
+                    #0f192d
+                );
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 13px;
+
+            padding: 21px;
+
+            min-height: 135px;
+
+            box-sizing: border-box;
+
+            transition:
+                transform 0.2s ease,
+                border-color 0.2s ease,
+                box-shadow 0.2s ease;
+
+        }
+
+
+        .card::before {
+
+            content: "";
+
+            position: absolute;
+
+            top: 0;
+
+            left: 0;
+
+            width: 100%;
+
+            height: 3px;
+
+            background: var(--blue);
+
+        }
+
+
+        .card:hover {
+
+            transform: translateY(-2px);
+
+            border-color: #304568;
+
+            box-shadow:
+                0 12px 30px rgba(0, 0, 0, 0.22);
+
+        }
+
+
+        .card h3 {
+
+            margin: 0 0 13px;
+
+            color: #94a3b8;
+
+            font-size: 12px;
+
+            font-weight: 600;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.5px;
+
+        }
+
+
+        .card .number {
+
+            margin: 0;
+
+            color: #f8fafc;
+
+            font-size: 31px;
+
+            line-height: 1;
+
+            font-weight: 700;
+
+        }
+
+
+        .card .number.danger {
+
+            color: #fb7185;
+
+        }
+
+
+        .card .number.warning {
+
+            color: #fbbf24;
+
+        }
+
+
+        .card span {
+
+            display: block;
+
+            margin-top: 11px;
+
+            color: #64748b;
+
+            font-size: 12px;
+
+        }
+
+
+        /* Card accent colors */
+
+        .card:nth-child(1)::before {
+
+            background: var(--blue);
+
+        }
+
+
+        .card:nth-child(2)::before {
+
+            background: var(--red);
+
+        }
+
+
+        .card:nth-child(3)::before {
+
+            background: var(--orange);
+
+        }
+
+
+        .card:nth-child(4)::before {
+
+            background: var(--yellow);
+
+        }
+
+
+        /* =========================================================
+           THREAT SECTION
+        ========================================================= */
+
+        .threat-section {
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #111c32,
+                    #0e182b
+                );
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 13px;
+
+            padding: 23px;
+
+            box-sizing: border-box;
+
+            overflow: hidden;
+
+        }
+
+
+        /* =========================================================
+           SECTION HEADER
+        ========================================================= */
+
+        .section-header {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            gap: 20px;
+
+            margin-bottom: 20px;
+
+        }
+
+
+        .section-header h2 {
+
+            margin: 0;
+
+            color: #e2e8f0;
+
+            font-size: 20px;
+
+        }
+
+
+        /* =========================================================
+           BUTTONS
+        ========================================================= */
+
+        .section-header button,
+        .filter-button,
+        .clear-button {
+
+            border: 1px solid #2b4772;
+
+            background: #172744;
+
+            color: #bfdbfe;
+
+            padding: 9px 16px;
+
+            border-radius: 7px;
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+
+        }
+
+
+        .section-header button:hover,
+        .filter-button:hover {
+
+            background: #1e3a63;
+
+            border-color: var(--blue);
+
+            color: white;
+
+        }
+
+
+        .section-header button:disabled {
+
+            opacity: 0.65;
+
+            cursor: not-allowed;
+
+        }
+
+
+        .filter-button {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #2563eb,
+                    #3b82f6
+                );
+
+            border-color: #3b82f6;
+
+            color: white;
+
+        }
+
+
+        .filter-button:hover {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #1d4ed8,
+                    #2563eb
+                );
+
+        }
+
+
+        .clear-button {
+
+            background:
+                rgba(100, 116, 139, 0.15);
+
+            border-color:
+                rgba(148, 163, 184, 0.25);
+
+            color: #cbd5e1;
+
+        }
+
+
+        .clear-button:hover {
+
+            background:
+                rgba(100, 116, 139, 0.25);
+
+            border-color: #64748b;
+
+        }
+
+
+        /* =========================================================
+           FILTERS
+        ========================================================= */
+
+        .threat-filters {
+
+            display: grid;
+
+            grid-template-columns:
+                minmax(220px, 1.4fr)
+                minmax(150px, 0.8fr)
+                minmax(180px, 1fr)
+                auto
+                auto;
+
+            gap: 10px;
+
+            align-items: center;
+
+            margin-bottom: 18px;
+
+        }
+
+
+        .threat-filters input,
+        .threat-filters select {
+
+            width: 100%;
+
+            box-sizing: border-box;
+
+            padding: 10px 12px;
+
+            border:
+                1px solid #293d60;
+
+            border-radius: 7px;
+
+            background: #0b1528;
+
+            color: #cbd5e1;
+
+            font-size: 13px;
+
+            outline: none;
+
+        }
+
+
+        .threat-filters input::placeholder {
+
+            color: #64748b;
+
+        }
+
+
+        .threat-filters input:focus,
+        .threat-filters select:focus {
+
+            border-color: var(--blue);
+
+            box-shadow:
+                0 0 0 2px
+                rgba(59, 130, 246, 0.10);
+
+        }
+
+
+        .threat-filters select option {
+
+            background: #0f192d;
+
+            color: #e2e8f0;
+
+        }
+
+
+        /* =========================================================
+           THREAT INFORMATION
+        ========================================================= */
+
+        .threat-info {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            gap: 15px;
+
+            flex-wrap: wrap;
+
+            padding: 12px 2px 16px;
+
+            margin-bottom: 4px;
+
+            font-size: 13px;
+
+            color: var(--text-secondary);
+
+        }
+
+
+        .threat-info strong {
+
+            color: #e2e8f0;
+
+            font-weight: 700;
+
+        }
+
+
+        .last-updated {
+
+            color: #64748b;
+
+        }
+
+
+        /* =========================================================
+           TABLE
+        ========================================================= */
+
+        .threat-table-wrapper {
+
+            width: 100%;
+
+            overflow-x: auto;
+
+            border:
+                1px solid
+                rgba(148, 163, 184, 0.08);
+
+            border-radius: 9px;
+
+        }
+
+
+        table {
+
+            width: 100%;
+
+            min-width: 1050px;
+
+            border-collapse: collapse;
+
+        }
+
+
+        thead {
+
+            background:
+                rgba(8, 15, 31, 0.80);
+
+        }
+
+
+        th {
+
+            padding: 14px;
+
+            text-align: left;
+
+            color: #64748b;
+
+            font-size: 11px;
+
+            font-weight: 700;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.5px;
+
+            border-bottom:
+                1px solid var(--border);
+
+            white-space: nowrap;
+
+        }
+
+
+        td {
+
+            padding: 14px;
+
+            color: #cbd5e1;
+
+            font-size: 13px;
+
+            border-bottom:
+                1px solid
+                rgba(148, 163, 184, 0.08);
+
+            vertical-align: middle;
+
+        }
+
+
+        tbody tr {
+
+            transition:
+                background 0.2s ease;
+
+        }
+
+
+        tbody tr:hover {
+
+            background:
+                rgba(59, 130, 246, 0.045);
+
+        }
+
+
+        tbody tr:last-child td {
+
+            border-bottom: none;
+
+        }
+
+
+        /* =========================================================
+           SEVERITY BADGES
+        ========================================================= */
+
+        .severity-badge,
+        .threat-type-badge {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 5px 10px;
+
+            border-radius: 6px;
+
+            font-size: 11px;
+
+            font-weight: 700;
+
+            white-space: nowrap;
+
+        }
+
+
+        .severity-critical {
+
+            background:
+                rgba(239, 68, 68, 0.13);
+
+            color: #f87171;
+
+            border:
+                1px solid
+                rgba(239, 68, 68, 0.22);
+
+        }
+
+
+        .severity-high {
+
+            background:
+                rgba(249, 115, 22, 0.13);
+
+            color: #fb923c;
+
+            border:
+                1px solid
+                rgba(249, 115, 22, 0.22);
+
+        }
+
+
+        .severity-medium {
+
+            background:
+                rgba(245, 158, 11, 0.13);
+
+            color: #fbbf24;
+
+            border:
+                1px solid
+                rgba(245, 158, 11, 0.22);
+
+        }
+
+
+        /* =========================================================
+           THREAT TYPE BADGES
+        ========================================================= */
+
+        .threat-port-scan {
+
+            background:
+                rgba(249, 115, 22, 0.13);
+
+            color: #fb923c;
+
+            border:
+                1px solid
+                rgba(249, 115, 22, 0.22);
+
+        }
+
+
+        .threat-icmp-flood {
+
+            background:
+                rgba(234, 179, 8, 0.13);
+
+            color: #facc15;
+
+            border:
+                1px solid
+                rgba(234, 179, 8, 0.22);
+
+        }
+
+
+        .threat-other {
+
+            background:
+                rgba(100, 116, 139, 0.13);
+
+            color: #94a3b8;
+
+            border:
+                1px solid
+                rgba(100, 116, 139, 0.22);
+
+        }
+
+
+        /* =========================================================
+           THREAT DETAILS
+        ========================================================= */
+
+        .threat-details {
+
+            max-width: 430px;
+
+            line-height: 1.5;
+
+            color: #94a3b8;
+
+        }
+
+
+        /* =========================================================
+           VIEW DETAILS BUTTON
+        ========================================================= */
+
+        .view-details-btn {
+
+            border:
+                1px solid
+                rgba(59, 130, 246, 0.35);
+
+            padding: 7px 12px;
+
+            border-radius: 6px;
+
+            font-size: 12px;
+
+            font-weight: 600;
+
+            cursor: pointer;
+
+            background:
+                rgba(59, 130, 246, 0.12);
+
+            color: #60a5fa;
+
+            white-space: nowrap;
+
+            transition: 0.2s;
+
+        }
+
+
+        .view-details-btn:hover {
+
+            background:
+                #2563eb;
+
+            border-color:
+                #3b82f6;
+
+            color: white;
+
+        }
+
+
+        /* =========================================================
+           RESPONSIVE
+        ========================================================= */
+
+        @media (max-width: 1250px) {
+
+            .cards {
+
+                grid-template-columns:
+                    repeat(2, minmax(0, 1fr));
+
+            }
+
+
+            .threat-filters {
+
+                grid-template-columns:
+                    repeat(2, minmax(0, 1fr));
+
+            }
+
+        }
+
+
+        @media (max-width: 950px) {
+
+            .sidebar {
+
+                width: 210px;
+
+                min-width: 210px;
+
+            }
+
+
+            .main-content {
+
+                padding: 25px 20px;
+
+            }
+
+
+            .threat-filters {
+
+                grid-template-columns: 1fr;
+
+            }
+
+        }
+
+
+        @media (max-width: 700px) {
+
+            .dashboard {
+
+                display: block;
+
+            }
+
+
+            .sidebar {
+
+                position: relative;
+
+                width: 100%;
+
+                min-width: 100%;
+
+                height: auto;
+
+                padding: 18px;
+
+            }
+
+
+            .sidebar-brand {
+
+                margin-bottom: 18px;
+
+            }
+
+
+            .sidebar nav {
+
+                flex-direction: row;
+
+                overflow-x: auto;
+
+            }
+
+
+            .sidebar nav a {
+
+                white-space: nowrap;
+
+            }
+
+
+            .main-content {
+
+                padding: 20px 15px 40px;
+
+            }
+
+
+            header {
+
+                align-items: flex-start;
+
+                flex-direction: column;
+
+            }
+
+
+            .cards {
+
+                grid-template-columns: 1fr;
+
+            }
+
+
+            .section-header {
+
+                align-items: flex-start;
+
+                flex-direction: column;
+
+            }
+
+
+            .threat-info {
+
+                align-items: flex-start;
+
+                flex-direction: column;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+    <div class="dashboard">
+
+
+        <!-- =====================================================
+             SIDEBAR
+        ====================================================== -->
+
+        <aside class="sidebar">
+
+            <div class="sidebar-brand">
+
+                <div class="sidebar-logo">
+                    🛡️
+                </div>
+
+                <div class="sidebar-brand-text">
+
+                    <strong>
+                        CyberShield
+                    </strong>
+
+                    <span>
+                        Network Security
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <nav>
+
+                <a href="/">
+
+                    <span class="nav-icon">
+                        ▦
+                    </span>
+
+                    <span>
+                        Dashboard
+                    </span>
+
+                </a>
+
+
+                <a href="/live-traffic">
+
+                    <span class="nav-icon">
+                        ≋
+                    </span>
+
+                    <span>
+                        Live Traffic
+                    </span>
+
+                </a>
+
+
+                <a href="/threats"
+                   class="active">
+
+                    <span class="nav-icon">
+                        ⚠
+                    </span>
+
+                    <span>
+                        Threats
+                    </span>
+
+                </a>
+
+
+                <a href="/reports">
+
+                    <span class="nav-icon">
+                        ▤
+                    </span>
+
+                    <span>
+                        Reports
+                    </span>
+
+                </a>
+
+
+                <a href="/settings">
+
+                    <span class="nav-icon">
+                        ⚙
+                    </span>
+
+                    <span>
+                        Settings
+                    </span>
+
+                </a>
+
+            </nav>
+
+        </aside>
+
+
+
+        <!-- =====================================================
+             MAIN CONTENT
+        ====================================================== -->
+
+        <main class="main-content">
+
+
+            <!-- =================================================
+                 HEADER
+            ================================================== -->
+
+            <header>
+
+                <div>
+
+                    <h1>
+                        Detected Threats
+                    </h1>
+
+                    <p>
+                        Monitor suspicious network activity
+                    </p>
+
+                </div>
+
+
+                <div class="status">
+
+                    <span class="status-dot"></span>
+
+                    Threat Monitoring Active
+
+                </div>
+
+            </header>
+
+
+
+            <!-- =================================================
+                 STATISTICS
+            ================================================== -->
+
+            <section class="cards">
+
+
+                <div class="card">
+
+                    <h3>
+                        Displayed Threats
+                    </h3>
+
+                    <p
+                        class="number danger"
+                        id="totalThreats">
+
+                        0
+
+                    </p>
+
+                    <span>
+                        Current filter results
+                    </span>
+
+                </div>
+
+
+
+                <div class="card">
+
+                    <h3>
+                        Critical Severity
+                    </h3>
+
+                    <p
+                        class="number danger"
+                        id="criticalThreats">
+
+                        0
+
+                    </p>
+
+                    <span>
+                        Critical risk threats
+                    </span>
+
+                </div>
+
+
+
+                <div class="card">
+
+                    <h3>
+                        High Severity
+                    </h3>
+
+                    <p
+                        class="number danger"
+                        id="highThreats">
+
+                        0
+
+                    </p>
+
+                    <span>
+                        High risk threats
+                    </span>
+
+                </div>
+
+
+
+                <div class="card">
+
+                    <h3>
+                        Medium Severity
+                    </h3>
+
+                    <p
+                        class="number warning"
+                        id="mediumThreats">
+
+                        0
+
+                    </p>
+
+                    <span>
+                        Medium risk threats
+                    </span>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 THREAT ACTIVITY
+            ================================================== -->
+
+            <section class="threat-section">
+
+
+                <div class="section-header">
+
+                    <h2>
+                        Threat Activity
+                    </h2>
+
+
+                    <button
+                        type="button"
+                        id="refreshThreatsButton"
+                        onclick="loadThreats(true)">
+
+                        ↻ Refresh
+
+                    </button>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     FILTERS
+                ================================================== -->
+
+                <div class="threat-filters">
+
+
+                    <input
+                        type="text"
+                        id="ipSearch"
+                        placeholder="Search Source IP"
+                        onkeydown="handleSearchKey(event)"
+                    >
+
+
+                    <select
+                        id="severityFilter"
+                        onchange="loadThreats()">
+
+                        <option value="All">
+                            All Severity
+                        </option>
+
+                        <option value="Critical">
+                            Critical
+                        </option>
+
+                        <option value="High">
+                            High
+                        </option>
+
+                        <option value="Medium">
+                            Medium
+                        </option>
+
+                    </select>
+
+
+                    <select
+                        id="typeFilter"
+                        onchange="loadThreats()">
+
+                        <option value="All">
+                            All Threat Types
+                        </option>
+
+                        <option value="Port Scan">
+                            Port Scan
+                        </option>
+
+                        <option value="ICMP Flood">
+                            ICMP Flood
+                        </option>
+
+                        <option value="TCP SYN Flood">
+                            TCP SYN Flood
+                        </option>
+
+                        <option value="UDP Flood">
+                            UDP Flood
+                        </option>
+
+                        <option value="Brute Force Attempt">
+                            Brute Force Attempt
+                        </option>
+
+                    </select>
+
+
+                    <button
+                        type="button"
+                        class="filter-button"
+                        onclick="loadThreats()">
+
+                        Search
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="clear-button"
+                        onclick="clearFilters()">
+
+                        Clear
+
+                    </button>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     INFORMATION
+                ================================================== -->
+
+                <div class="threat-info">
+
+
+                    <div>
+
+                        Total threats in database:
+
+                        <strong id="databaseThreatCount">
+                            Loading...
+                        </strong>
+
+                    </div>
+
+
+                    <div class="last-updated">
+
+                        Last updated:
+
+                        <strong id="lastUpdated">
+                            --
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     TABLE
+                ================================================== -->
+
+                <div class="threat-table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Source IP
+                                </th>
+
+                                <th>
+                                    Threat Type
+                                </th>
+
+                                <th>
+                                    Severity
+                                </th>
+
+                                <th>
+                                    Details
+                                </th>
+
+                                <th>
+                                    Detection Time
+                                </th>
+
+                                <th>
+                                    Action
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="threatTable">
+
+                            <tr>
+
+                                <td colspan="6">
+
+                                    Loading threats...
+
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+
+    <!-- =========================================================
+         EXISTING THREAT JAVASCRIPT
+         FUNCTIONALITY PRESERVED
+    ========================================================== -->
+
+    <script>
+
+        // ==========================================
+        // Get Refresh Interval From Settings
+        // ==========================================
+
+        const savedInterval =
+            localStorage.getItem(
+                "refreshInterval"
+            );
+
+
+        const refreshInterval =
+            savedInterval
+                ? parseInt(savedInterval)
+                : 3000;
+
+
+
+        // ==========================================
+        // Severity CSS Class
+        // ==========================================
+
+        function getSeverityClass(
+            severity
+        ) {
+
+            if (!severity) {
+
+                return "severity-medium";
+
+            }
+
+
+            const level =
+                severity.toLowerCase();
+
+
+            if (
+                level === "critical"
+            ) {
+
+                return "severity-critical";
+
+            }
+
+
+            if (
+                level === "high"
+            ) {
+
+                return "severity-high";
+
+            }
+
+
+            if (
+                level === "medium"
+            ) {
+
+                return "severity-medium";
+
+            }
+
+
+            return "severity-medium";
+
+        }
+
+
+
+        // ==========================================
+        // Threat Type CSS Class
+        // ==========================================
+
+        function getThreatTypeClass(
+            threatType
+        ) {
+
+            if (!threatType) {
+
+                return "threat-other";
+
+            }
+
+
+            const type =
+                threatType.toLowerCase();
+
+
+            if (
+                type === "port scan"
+            ) {
+
+                return "threat-port-scan";
+
+            }
+
+
+            if (
+                type === "icmp flood"
+            ) {
+
+                return "threat-icmp-flood";
+
+            }
+
+
+            return "threat-other";
+
+        }
+
+
+
+        // ==========================================
+        // Search With Enter Key
+        // ==========================================
+
+        function handleSearchKey(
+            event
+        ) {
+
+            if (
+                event.key === "Enter"
+            ) {
+
+                loadThreats();
+
+            }
+
+        }
+
+
+
+        // ==========================================
+        // Load Threats
+        // ==========================================
+
+        async function loadThreats(
+            manualRefresh = false
+        ) {
+
+            const refreshButton =
+                document.getElementById(
+                    "refreshThreatsButton"
+                );
+
+
+            try {
+
+
+                // ==================================
+                // Manual Refresh State
+                // ==================================
+
+                if (
+                    manualRefresh &&
+                    refreshButton
+                ) {
+
+                    refreshButton.textContent =
+                        "Refreshing...";
+
+                    refreshButton.disabled =
+                        true;
+
+                }
+
+
+
+                // ==================================
+                // Get Filters
+                // ==================================
+
+                const severity =
+                    document.getElementById(
+                        "severityFilter"
+                    ).value;
+
+
+                const threatType =
+                    document.getElementById(
+                        "typeFilter"
+                    ).value;
+
+
+                const sourceIP =
+                    document.getElementById(
+                        "ipSearch"
+                    ).value.trim();
+
+
+
+                // ==================================
+                // Build API URL
+                // ==================================
+
+                let apiUrl =
+                    "/api/threats";
+
+
+                const parameters = [];
+
+
+
+                if (
+                    sourceIP !== ""
+                ) {
+
+                    parameters.push(
+                        "source_ip=" +
+                        encodeURIComponent(
+                            sourceIP
+                        )
+                    );
+
+                }
+
+
+
+                if (
+                    severity !== "All"
+                ) {
+
+                    parameters.push(
+                        "severity=" +
+                        encodeURIComponent(
+                            severity
+                        )
+                    );
+
+                }
+
+
+
+                if (
+                    threatType !== "All"
+                ) {
+
+                    parameters.push(
+                        "type=" +
+                        encodeURIComponent(
+                            threatType
+                        )
+                    );
+
+                }
+
+
+
+                if (
+                    parameters.length > 0
+                ) {
+
+                    apiUrl +=
+                        "?" +
+                        parameters.join(
+                            "&"
+                        );
+
+                }
+
+
+
+                // ==================================
+                // Fetch Threats
+                // ==================================
+
+                const response =
+                    await fetch(
+                        apiUrl,
+                        {
+                            cache: "no-store"
+                        }
+                    );
+
+
+                if (
+                    !response.ok
+                ) {
+
+                    throw new Error(
+                        "Failed to fetch threats"
+                    );
+
+                }
+
+
+                const threats =
+                    await response.json();
+
+
+
+                // ==================================
+                // Table
+                // ==================================
+
+                const table =
+                    document.getElementById(
+                        "threatTable"
+                    );
+
+
+                table.innerHTML = "";
+
+
+
+                // ==================================
+                // Counters
+                // ==================================
+
+                let criticalCount = 0;
+
+                let highCount = 0;
+
+                let mediumCount = 0;
+
+
+
+                // ==================================
+                // No Threats
+                // ==================================
+
+                if (
+                    threats.length === 0
+                ) {
+
+                    table.innerHTML = `
+
+                        <tr>
+
+                            <td colspan="6">
+
+                                No threats found
+                                for the selected filters.
+
+                            </td>
+
+                        </tr>
+
+                    `;
+
+                }
+
+
+
+                // ==================================
+                // Display Threats
+                // ==================================
+
+                else {
+
+                    threats.forEach(
+                        threat => {
+
+
+                            // --------------------------
+                            // Severity
+                            // --------------------------
+
+                            const severity =
+                                threat.severity
+                                    ? threat.severity.toLowerCase()
+                                    : "medium";
+
+
+                            if (
+                                severity === "critical"
+                            ) {
+
+                                criticalCount++;
+
+                            }
+
+                            else if (
+                                severity === "high"
+                            ) {
+
+                                highCount++;
+
+                            }
+
+                            else if (
+                                severity === "medium"
+                            ) {
+
+                                mediumCount++;
+
+                            }
+
+
+
+                            // --------------------------
+                            // Details
+                            // --------------------------
+
+                            const details =
+                                threat.details &&
+                                threat.details.trim() !== ""
+                                    ? threat.details
+                                    : "Details not available";
+
+
+
+                            // --------------------------
+                            // Threat Type
+                            // --------------------------
+
+                            const threatTypeClass =
+                                getThreatTypeClass(
+                                    threat.threat_type
+                                );
+
+
+
+                            // --------------------------
+                            // Add Row
+                            // --------------------------
+
+                            table.innerHTML += `
+
+                                <tr>
+
+                                    <td>
+
+                                        ${threat.source_ip}
+
+                                    </td>
+
+
+                                    <td>
+
+                                        <span
+                                            class="threat-type-badge ${threatTypeClass}">
+
+                                            ${threat.threat_type}
+
+                                        </span>
+
+                                    </td>
+
+
+                                    <td>
+
+                                        <span
+                                            class="severity-badge ${getSeverityClass(threat.severity)}">
+
+                                            ${threat.severity || "Medium"}
+
+                                        </span>
+
+                                    </td>
+
+
+                                    <td>
+
+                                        <div
+                                            class="threat-details">
+
+                                            ${details}
+
+                                        </div>
+
+                                    </td>
+
+
+                                    <td>
+
+                                        ${threat.timestamp}
+
+                                    </td>
+
+
+                                    <td>
+
+                                        <button
+                                            type="button"
+                                            class="view-details-btn"
+                                            onclick="viewThreat(${threat.id})">
+
+                                            View Details
+
+                                        </button>
+
+                                    </td>
+
+                                </tr>
+
+                            `;
+
+                        }
+                    );
+
+                }
+
+
+
+                // ==================================
+                // Update Statistics
+                // ==================================
+
+                document.getElementById(
+                    "totalThreats"
+                ).textContent =
+                    threats.length;
+
+
+                document.getElementById(
+                    "criticalThreats"
+                ).textContent =
+                    criticalCount;
+
+
+                document.getElementById(
+                    "highThreats"
+                ).textContent =
+                    highCount;
+
+
+                document.getElementById(
+                    "mediumThreats"
+                ).textContent =
+                    mediumCount;
+
+
+
+                // ==================================
+                // Last Updated
+                // ==================================
+
+                document.getElementById(
+                    "lastUpdated"
+                ).textContent =
+                    new Date().toLocaleTimeString();
+
+
+
+                // ==================================
+                // Restore Refresh Button
+                // ==================================
+
+                if (
+                    manualRefresh &&
+                    refreshButton
+                ) {
+
+                    refreshButton.textContent =
+                        "↻ Refresh";
+
+                    refreshButton.disabled =
+                        false;
+
+                }
+
+            }
+
+
+            catch (error) {
+
+                console.error(
+                    "Error loading threats:",
+                    error
+                );
+
+
+                document.getElementById(
+                    "threatTable"
+                ).innerHTML = `
+
+                    <tr>
+
+                        <td colspan="6">
+
+                            Error loading threats.
+
+                        </td>
+
+                    </tr>
+
+                `;
+
+
+                if (refreshButton) {
+
+                    refreshButton.textContent =
+                        "↻ Refresh";
+
+                    refreshButton.disabled =
+                        false;
+
+                }
+
+            }
+
+        }
+
+
+
+        // ==========================================
+        // View Threat Details
+        // ==========================================
+
+        function viewThreat(
+            threatId
+        ) {
+
+            window.location.href =
+                "/threat-details?id=" +
+                encodeURIComponent(
+                    threatId
+                );
+
+        }
+
+
+
+        // ==========================================
+        // Load Database Threat Count
+        // ==========================================
+
+        async function loadThreatCount() {
+
+            try {
+
+                const response =
+                    await fetch(
+                        "/api/threat-count",
+                        {
+                            cache: "no-store"
+                        }
+                    );
+
+
+                if (
+                    !response.ok
+                ) {
+
+                    throw new Error(
+                        "Failed to fetch threat count"
+                    );
+
+                }
+
+
+                const data =
+                    await response.json();
+
+
+                document.getElementById(
+                    "databaseThreatCount"
+                ).textContent =
+                    data.total.toLocaleString();
+
+            }
+
+
+            catch (error) {
+
+                console.error(
+                    "Error loading threat count:",
+                    error
+                );
+
+
+                document.getElementById(
+                    "databaseThreatCount"
+                ).textContent =
+                    "Unavailable";
+
+            }
+
+        }
+
+
+
+        // ==========================================
+        // Clear Filters
+        // ==========================================
+
+        function clearFilters() {
+
+            document.getElementById(
+                "ipSearch"
+            ).value = "";
+
+
+            document.getElementById(
+                "severityFilter"
+            ).value = "All";
+
+
+            document.getElementById(
+                "typeFilter"
+            ).value = "All";
+
+
+            loadThreats();
+
+        }
+
+
+
+        // ==========================================
+        // Initial Load
+        // ==========================================
+
+        loadThreats();
+
+        loadThreatCount();
+
+
+
+        // ==========================================
+        // Auto Refresh
+        // ==========================================
+
+        setInterval(
+            loadThreats,
+            refreshInterval
+        );
+
+    </script>
+
+</body>
+
+</html>
