@@ -1,0 +1,1079 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CyberShield | Network Threat Detection</title>
+
+    <style>
+        :root {
+            --bg: #080f20;
+            --sidebar: #0b1528;
+            --panel: #101b30;
+            --panel-hover: #14223a;
+            --border: #223451;
+            --blue: #3478f6;
+            --blue-light: #60a5fa;
+            --text: #f3f6fc;
+            --muted: #94a8c4;
+            --success: #22c55e;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 90px;
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            background-image:
+                linear-gradient(
+                    rgba(75, 130, 220, 0.035) 1px,
+                    transparent 1px
+                ),
+                linear-gradient(
+                    90deg,
+                    rgba(75, 130, 220, 0.035) 1px,
+                    transparent 1px
+                );
+            background-size: 46px 46px;
+        }
+
+        header,
+        main,
+        footer {
+            position: relative;
+            z-index: 1;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        button,
+        a {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .container {
+            width: min(1200px, 90%);
+            margin: 0 auto;
+        }
+
+        /* =========================
+           NAVIGATION
+        ========================= */
+
+        header {
+            background: rgba(8, 15, 32, 0.96);
+            border-bottom: 1px solid rgba(110, 145, 195, 0.12);
+        }
+
+        nav {
+            min-height: 82px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 23px;
+            font-weight: 750;
+            letter-spacing: -0.7px;
+            white-space: nowrap;
+        }
+
+        .brand-icon {
+            width: 43px;
+            height: 43px;
+            display: grid;
+            place-items: center;
+            border-radius: 12px;
+            background: linear-gradient(145deg, #4387ff, #2860d8);
+            box-shadow: 0 5px 22px rgba(52, 120, 246, 0.2);
+            color: white;
+            font-size: 25px;
+        }
+
+        .brand-name span {
+            color: var(--blue-light);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .nav-links > a:not(.nav-button):hover {
+            color: white;
+        }
+
+        .nav-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            padding: 12px 17px;
+            border: 1px solid #31548b;
+            border-radius: 9px;
+            color: #dce8ff;
+            background: rgba(52, 120, 246, 0.07);
+            font-weight: 600;
+            transition: 0.2s ease;
+        }
+
+        .nav-button:hover {
+            background: rgba(52, 120, 246, 0.18);
+            border-color: var(--blue);
+        }
+
+        /* =========================
+           HERO SECTION
+        ========================= */
+
+        .hero {
+            display: grid;
+            grid-template-columns: 1.12fr 0.88fr;
+            align-items: center;
+            gap: 55px;
+            padding-top: 95px;
+            padding-bottom: 90px;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 14px;
+            margin-bottom: 26px;
+            border: 1px solid rgba(75, 130, 220, 0.27);
+            border-radius: 30px;
+            background: rgba(52, 120, 246, 0.08);
+            color: #8db8ff;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            display: inline-block;
+            flex-shrink: 0;
+            border-radius: 50%;
+            background: var(--success);
+            box-shadow: 0 0 10px rgba(34, 197, 94, 0.35);
+        }
+
+        .hero h1 {
+            font-size: clamp(39px, 4.6vw, 64px);
+            line-height: 1.14;
+            letter-spacing: -2.1px;
+            font-weight: 750;
+            margin-bottom: 25px;
+        }
+
+        .hero h1 .accent {
+            color: var(--blue-light);
+        }
+
+        .hero-description {
+            max-width: 570px;
+            color: var(--muted);
+            font-size: 16px;
+            line-height: 1.9;
+            margin-bottom: 32px;
+        }
+
+        .hero-actions {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+
+        .primary-button {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            padding: 15px 22px;
+            border: 1px solid #4385fa;
+            border-radius: 9px;
+            background: linear-gradient(135deg, #4285fa, #2865df);
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+            box-shadow: 0 7px 24px rgba(52, 120, 246, 0.16);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .primary-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 28px rgba(52, 120, 246, 0.28);
+        }
+
+        .secondary-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            padding: 15px 20px;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            background: rgba(16, 27, 48, 0.7);
+            color: #d9e4f6;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .secondary-button:hover {
+            border-color: #4269a4;
+            background: var(--panel-hover);
+        }
+
+        .hero-note {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 27px;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        /* =========================
+           HERO VISUAL PANEL
+        ========================= */
+
+        .visual-panel {
+            min-height: 405px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #243653;
+            border-radius: 21px;
+            background:
+                radial-gradient(
+                    circle at 50% 45%,
+                    rgba(52, 120, 246, 0.14),
+                    transparent 55%
+                ),
+                linear-gradient(145deg, #101b30, #0b1426);
+            box-shadow: 0 20px 65px rgba(0, 0, 0, 0.12);
+        }
+
+        .visual-panel::before,
+        .visual-panel::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 44%;
+            transform: translate(-50%, -50%);
+            border: 1px solid rgba(85, 145, 245, 0.18);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .visual-panel::before {
+            width: 290px;
+            height: 290px;
+        }
+
+        .visual-panel::after {
+            width: 220px;
+            height: 220px;
+        }
+
+        .shield {
+            z-index: 1;
+            width: 125px;
+            height: 125px;
+            display: grid;
+            place-items: center;
+            border: 1px solid rgba(96, 165, 250, 0.25);
+            border-radius: 28px;
+            background: linear-gradient(
+                145deg,
+                rgba(52, 120, 246, 0.17),
+                rgba(52, 120, 246, 0.04)
+            );
+            color: #70a9ff;
+            font-size: 70px;
+            text-shadow: 0 0 30px rgba(52, 120, 246, 0.35);
+        }
+
+        .visual-caption {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        .visual-caption h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .visual-caption p {
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .mini-tag {
+            position: absolute;
+            z-index: 2;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 11px 13px;
+            border: 1px solid #2a4267;
+            border-radius: 9px;
+            background: #111f36;
+            color: #a8caff;
+            font-size: 10px;
+            font-weight: 650;
+            letter-spacing: 0.2px;
+        }
+
+        .tag-one {
+            top: 48px;
+            left: 22px;
+        }
+
+        .tag-two {
+            top: 112px;
+            right: 20px;
+        }
+
+        .tag-three {
+            right: 24px;
+            bottom: 38px;
+        }
+
+        /* =========================
+           FEATURE SECTION
+        ========================= */
+
+        .features {
+            padding-top: 50px;
+            padding-bottom: 90px;
+        }
+
+        .section-heading {
+            max-width: 650px;
+            margin: 0 auto 42px;
+            text-align: center;
+        }
+
+        .section-label {
+            margin-bottom: 14px;
+            color: var(--blue-light);
+            font-size: 11px;
+            font-weight: 750;
+            letter-spacing: 2px;
+        }
+
+        .section-heading h2 {
+            margin-bottom: 15px;
+            font-size: clamp(28px, 3.5vw, 39px);
+            letter-spacing: -1px;
+        }
+
+        .section-heading p {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.9;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .feature-card {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            min-width: 0;
+            padding: 25px 22px;
+            border: 1px solid #223451;
+            border-radius: 14px;
+            background: linear-gradient(
+                145deg,
+                rgba(17, 29, 50, 0.96),
+                rgba(12, 22, 39, 0.96)
+            );
+            transition: transform 0.22s, border-color 0.22s,
+                background 0.22s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            border-color: #3b64a0;
+            background: var(--panel-hover);
+        }
+
+        .feature-icon {
+            width: 49px;
+            height: 49px;
+            display: grid;
+            place-items: center;
+            margin-bottom: 22px;
+            border: 1px solid rgba(75, 130, 220, 0.16);
+            border-radius: 12px;
+            background: rgba(52, 120, 246, 0.12);
+            color: #76adff;
+            font-size: 24px;
+        }
+
+        .feature-card h3 {
+            margin-bottom: 12px;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .feature-card p {
+            flex: 1;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.85;
+        }
+
+        .feature-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 23px;
+            color: #79adff;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .feature-card:hover .feature-link {
+            color: white;
+        }
+
+        /* =========================
+           DASHBOARD CTA
+        ========================= */
+
+        .cta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 25px;
+            margin-bottom: 75px;
+            padding: 36px;
+            border: 1px solid #2a4267;
+            border-radius: 17px;
+            background:
+                radial-gradient(
+                    circle at 5% 50%,
+                    rgba(52, 120, 246, 0.12),
+                    transparent 45%
+                ),
+                #101b30;
+        }
+
+        .cta h2 {
+            margin-bottom: 10px;
+            font-size: 25px;
+            letter-spacing: -0.5px;
+        }
+
+        .cta p {
+            max-width: 620px;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.9;
+        }
+
+        .cta .primary-button {
+            flex-shrink: 0;
+        }
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        footer {
+            border-top: 1px solid rgba(110, 145, 195, 0.12);
+            background: rgba(7, 13, 27, 0.7);
+        }
+
+        .footer-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 18px;
+            padding-top: 26px;
+            padding-bottom: 26px;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .footer-brand {
+            color: #e5edfa;
+            font-size: 15px;
+            font-weight: 750;
+        }
+
+        .footer-brand span {
+            color: var(--blue-light);
+        }
+
+        /* =========================
+           ABOUT SECTION
+        ========================= */
+
+        .about-section {
+            padding-top: 20px;
+            padding-bottom: 90px;
+            scroll-margin-top: 35px;
+        }
+
+        .about-content {
+            padding: 42px;
+            border: 1px solid var(--border);
+            border-radius: 17px;
+            background: linear-gradient(
+                145deg,
+                rgba(17, 29, 50, 0.98),
+                rgba(10, 19, 35, 0.98)
+            );
+        }
+
+        .about-content h2 {
+            max-width: 750px;
+            margin: 15px 0 22px;
+            font-size: clamp(28px, 4vw, 40px);
+            line-height: 1.3;
+            letter-spacing: -1px;
+        }
+
+        .about-content h2 span {
+            color: var(--blue-light);
+        }
+
+        .about-content p {
+            max-width: 850px;
+            margin-bottom: 16px;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.9;
+        }
+
+        .about-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 25px 0;
+        }
+
+        .about-tech span {
+            padding: 9px 13px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: rgba(52, 120, 246, 0.08);
+            color: #b9d2ff;
+            font-size: 12px;
+        }
+
+        /* =========================
+           RESPONSIVE DESIGN
+        ========================= */
+
+        @media (max-width: 1000px) {
+            .hero {
+                grid-template-columns: 1fr 0.9fr;
+                gap: 30px;
+                padding-top: 75px;
+            }
+
+            .hero h1 {
+                font-size: clamp(36px, 4.4vw, 52px);
+            }
+
+            .visual-panel {
+                min-height: 360px;
+            }
+
+            .feature-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 760px) {
+            .hero {
+                grid-template-columns: 1fr;
+                padding-top: 65px;
+                padding-bottom: 65px;
+            }
+
+            .hero h1 {
+                font-size: clamp(38px, 8vw, 56px);
+            }
+
+            .visual-panel {
+                min-height: 350px;
+            }
+
+            .cta {
+                align-items: flex-start;
+                flex-direction: column;
+                padding: 28px;
+            }
+
+            .features {
+                padding-top: 30px;
+            }
+        }
+
+        @media (max-width: 520px) {
+            .about-content {
+                padding: 24px;
+            }
+
+            .container {
+                width: 91%;
+            }
+
+            nav {
+                min-height: 72px;
+                gap: 10px;
+            }
+
+            .brand {
+                gap: 8px;
+                font-size: 19px;
+            }
+
+            .brand-icon {
+                width: 36px;
+                height: 36px;
+                font-size: 21px;
+            }
+
+            .nav-links {
+                gap: 10px;
+            }
+
+            .nav-links .nav-text {
+                display: none;
+            }
+
+            .nav-button {
+                padding: 10px 11px;
+                font-size: 11px;
+            }
+
+            .hero {
+                padding-top: 52px;
+            }
+
+            .eyebrow {
+                font-size: 9px;
+                letter-spacing: 0.8px;
+            }
+
+            .hero h1 {
+                font-size: 39px;
+                letter-spacing: -1.3px;
+            }
+
+            .hero-description {
+                font-size: 14px;
+            }
+
+            .hero-actions {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .primary-button,
+            .secondary-button {
+                width: 100%;
+            }
+
+            .visual-panel {
+                min-height: 315px;
+            }
+
+            .visual-panel::before {
+                width: 245px;
+                height: 245px;
+            }
+
+            .visual-panel::after {
+                width: 185px;
+                height: 185px;
+            }
+
+            .tag-one {
+                top: 25px;
+                left: 10px;
+            }
+
+            .tag-two {
+                top: 77px;
+                right: 9px;
+            }
+
+            .tag-three {
+                right: 12px;
+                bottom: 20px;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+                gap: 14px;
+            }
+
+            .feature-card {
+                padding: 23px;
+            }
+
+            .section-heading {
+                text-align: left;
+            }
+
+            .section-heading h2 {
+                font-size: 30px;
+            }
+
+            .cta h2 {
+                font-size: 23px;
+            }
+
+            .footer-content {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
+
+            *,
+            *::before,
+            *::after {
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <header>
+        <nav class="container">
+
+            <a href="/" class="brand">
+                <span class="brand-icon">⬡</span>
+                <span class="brand-name">
+                    Cyber<span>Shield</span>
+                </span>
+            </a>
+
+            <div class="nav-links">
+                <a href="#features" class="nav-text">Features</a>
+                <a href="#about-details" class="nav-text">About</a>
+
+                <a href="/dashboard" class="nav-button">
+                    Open Dashboard <span>↗</span>
+                </a>
+            </div>
+
+        </nav>
+    </header>
+
+    <main>
+
+        <!-- Hero Section -->
+        <section class="hero container" id="about">
+
+            <div class="hero-content">
+
+                <div class="eyebrow">
+                    <span class="status-dot"></span>
+                    NETWORK THREAT DETECTION SYSTEM
+                </div>
+
+                <h1>
+                    Monitor your network.<br>
+                    <span class="accent">Detect threats clearly.</span>
+                </h1>
+
+                <p class="hero-description">
+                    CyberShield helps you monitor network traffic,
+                    identify selected suspicious activities, and
+                    review threat information through a simple,
+                    professional monitoring dashboard.
+                </p>
+
+                <div class="hero-actions">
+
+                    <a href="/dashboard" class="primary-button">
+                        Launch Dashboard <span>→</span>
+                    </a>
+
+                    <a href="#features" class="secondary-button">
+                        Explore Features <span>↓</span>
+                    </a>
+
+                </div>
+
+                <div class="hero-note">
+                    <span class="status-dot"></span>
+                    <span>Network visibility and security insights</span>
+                </div>
+
+            </div>
+
+            <!-- Decorative security panel -->
+            <div class="visual-panel">
+
+                <div class="mini-tag tag-one">
+                    ◈ PACKET MONITORING
+                </div>
+
+                <div class="mini-tag tag-two">
+                    ⌁ TRAFFIC ANALYSIS
+                </div>
+
+                <div class="shield">⬡</div>
+
+                <div class="visual-caption">
+                    <h3>CyberShield Security</h3>
+                    <p>Network visibility and threat detection</p>
+                </div>
+
+                <div class="mini-tag tag-three">
+                    ◉ THREAT INSIGHTS
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- Features Section -->
+        <section class="features container" id="features">
+
+            <div class="section-heading">
+
+                <div class="section-label">
+                    SYSTEM CAPABILITIES
+                </div>
+
+                <h2>Everything in one dashboard</h2>
+
+                <p>
+                    Access network traffic, detected threats,
+                    security reports, and available system settings
+                    from one convenient starting page.
+                </p>
+
+            </div>
+
+            <div class="feature-grid">
+
+                <!-- Live Traffic -->
+                <a href="/live-traffic" class="feature-card">
+
+                    <div class="feature-icon">⌁</div>
+
+                    <h3>Live Traffic</h3>
+
+                    <p>
+                        View recently captured network packets,
+                        source and destination addresses,
+                        protocols, and available packet details.
+                    </p>
+
+                    <span class="feature-link">
+                        View Traffic <span>→</span>
+                    </span>
+
+                </a>
+
+                <!-- Threat Detection -->
+                <a href="/threats" class="feature-card">
+
+                    <div class="feature-icon">⬡</div>
+
+                    <h3>Threat Detection</h3>
+
+                    <p>
+                        Review detected suspicious activity,
+                        threat classifications, source addresses,
+                        and available threat details.
+                    </p>
+
+                    <span class="feature-link">
+                        View Threats <span>→</span>
+                    </span>
+
+                </a>
+
+                <!-- Reports -->
+                <a href="/reports" class="feature-card">
+
+                    <div class="feature-icon">▤</div>
+
+                    <h3>Security Reports</h3>
+
+                    <p>
+                        Review packet and threat summaries,
+                        view recent detections, print reports,
+                        and export supported data to CSV.
+                    </p>
+
+                    <span class="feature-link">
+                        Open Reports <span>→</span>
+                    </span>
+
+                </a>
+
+                <!-- Settings -->
+                <a href="/settings" class="feature-card">
+
+                    <div class="feature-icon">⚙</div>
+
+                    <h3>System Settings</h3>
+
+                    <p>
+                        Manage the available dashboard refresh
+                        settings and threat-record controls.
+                    </p>
+
+                    <span class="feature-link">
+                        Open Settings <span>→</span>
+                    </span>
+
+                </a>
+
+            </div>
+
+        </section>
+
+        <!-- About CyberShield -->
+        <section class="about-section container" id="about-details">
+
+            <div class="about-content">
+                <div class="section-label">ABOUT CYBERSHIELD</div>
+
+                <h2>
+                    Understanding your network.
+                    <span>Detecting suspicious activity.</span>
+                </h2>
+
+                <p>
+                    CyberShield is a web-based Network Threat Detection System
+                    developed to monitor network traffic and identify selected
+                    suspicious activities. It provides a simple interface for
+                    reviewing captured packets, detected threats, and reports.
+                </p>
+
+                <p>
+                    Built using Python, Flask, Scapy, and SQLite, the project
+                    demonstrates basic network monitoring and rule-based threat
+                    detection in an educational environment.
+                </p>
+
+                <div class="about-tech">
+                    <span>Python</span>
+                    <span>Flask</span>
+                    <span>Scapy</span>
+                    <span>SQLite</span>
+                </div>
+
+                <a href="/dashboard" class="primary-button">
+                    Explore Dashboard →
+                </a>
+            </div>
+
+        </section>
+
+        <!-- Dashboard Call to Action -->
+        <section class="container">
+
+            <div class="cta">
+
+                <div>
+                    <h2>Ready to explore your network?</h2>
+
+                    <p>
+                        Open your CyberShield dashboard to review
+                        packet statistics and detected threat records.
+                    </p>
+                </div>
+
+                <a href="/dashboard" class="primary-button">
+                    Go to Dashboard <span>→</span>
+                </a>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer>
+
+        <div class="container footer-content">
+
+            <div class="footer-brand">
+                Cyber<span>Shield</span>
+            </div>
+
+            <p>
+                Network Threat Detection System
+            </p>
+
+            <p>
+                Python · Flask · Scapy · SQLite
+            </p>
+
+        </div>
+
+    </footer>
+
+</body>
+</html>

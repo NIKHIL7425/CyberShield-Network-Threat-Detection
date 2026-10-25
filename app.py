@@ -1,20 +1,27 @@
+
 from flask import Flask, render_template, jsonify, request
 import sqlite3
 
-
 app = Flask(__name__)
 
-
 DATABASE = "database/threats.db"
+
+
+# ==========================================================
+# Homepage
+# ==========================================================
+
+@app.route("/")
+def home():
+    return render_template("home.html")
 
 
 # ==========================================================
 # Dashboard Page
 # ==========================================================
 
-@app.route("/")
+@app.route("/dashboard")
 def dashboard():
-
     return render_template("dashboard.html")
 
 
@@ -24,7 +31,6 @@ def dashboard():
 
 @app.route("/live-traffic")
 def live_traffic():
-
     return render_template("live_traffic.html")
 
 
@@ -34,7 +40,6 @@ def live_traffic():
 
 @app.route("/threats")
 def threats_page():
-
     return render_template("threats.html")
 
 
@@ -44,10 +49,7 @@ def threats_page():
 
 @app.route("/threat-details")
 def threat_details_page():
-
-    return render_template(
-        "threat_details.html"
-    )
+    return render_template("threat_details.html")
 
 
 # ==========================================================
@@ -56,7 +58,6 @@ def threat_details_page():
 
 @app.route("/reports")
 def reports_page():
-
     return render_template("reports.html")
 
 
@@ -66,7 +67,6 @@ def reports_page():
 
 @app.route("/settings")
 def settings_page():
-
     return render_template("settings.html")
 
 
@@ -76,40 +76,18 @@ def settings_page():
 
 @app.route("/api/stats")
 def stats():
-
     connection = sqlite3.connect(DATABASE)
-
     cursor = connection.cursor()
-
-
-    # ======================================================
-    # Total Packets
-    # ======================================================
 
     total_packets = cursor.execute(
         "SELECT COUNT(*) FROM packets"
     ).fetchone()[0]
 
-
-    # ======================================================
-    # Total Threats
-    # ======================================================
-
     total_threats = cursor.execute(
         "SELECT COUNT(*) FROM threats"
     ).fetchone()[0]
 
-
-    # ======================================================
-    # Monitored Packets
-    # ======================================================
-
     monitored_packets = total_packets
-
-
-    # ======================================================
-    # Protocol Statistics
-    # ======================================================
 
     tcp_packets = cursor.execute("""
         SELECT COUNT(*)
@@ -117,13 +95,11 @@ def stats():
         WHERE protocol = 'TCP'
     """).fetchone()[0]
 
-
     udp_packets = cursor.execute("""
         SELECT COUNT(*)
         FROM packets
         WHERE protocol = 'UDP'
     """).fetchone()[0]
-
 
     icmp_packets = cursor.execute("""
         SELECT COUNT(*)
@@ -131,33 +107,16 @@ def stats():
         WHERE protocol = 'ICMP'
     """).fetchone()[0]
 
-
     connection.close()
 
-
     return jsonify({
-
-        "total_packets":
-            total_packets,
-
-        "monitored_packets":
-            monitored_packets,
-
-        "total_threats":
-            total_threats,
-
-        "alerts":
-            total_threats,
-
-        "tcp_packets":
-            tcp_packets,
-
-        "udp_packets":
-            udp_packets,
-
-        "icmp_packets":
-            icmp_packets
-
+        "total_packets": total_packets,
+        "monitored_packets": monitored_packets,
+        "total_threats": total_threats,
+        "alerts": total_threats,
+        "tcp_packets": tcp_packets,
+        "udp_packets": udp_packets,
+        "icmp_packets": icmp_packets
     })
 
 
@@ -167,28 +126,13 @@ def stats():
 
 @app.route("/api/threats")
 def threats():
-
     connection = sqlite3.connect(DATABASE)
-
     connection.row_factory = sqlite3.Row
-
     cursor = connection.cursor()
 
-
-    # ======================================================
-    # Get Filters
-    # ======================================================
-
     severity = request.args.get("severity")
-
     threat_type = request.args.get("type")
-
     source_ip = request.args.get("source_ip")
-
-
-    # ======================================================
-    # Base Query
-    # ======================================================
 
     query = """
         SELECT
@@ -202,109 +146,45 @@ def threats():
         WHERE 1=1
     """
 
-
     parameters = []
 
-
-    # ======================================================
     # Severity Filter
-    # ======================================================
-
     if severity and severity.lower() != "all":
+        query += " AND LOWER(severity) = LOWER(?)"
+        parameters.append(severity)
 
-        query += """
-            AND LOWER(severity) = LOWER(?)
-        """
-
-        parameters.append(
-            severity
-        )
-
-
-    # ======================================================
     # Threat Type Filter
-    # ======================================================
-
     if threat_type and threat_type.lower() != "all":
+        query += " AND LOWER(threat_type) = LOWER(?)"
+        parameters.append(threat_type)
 
-        query += """
-            AND LOWER(threat_type) = LOWER(?)
-        """
-
-        parameters.append(
-            threat_type
-        )
-
-
-    # ======================================================
     # Source IP Filter
-    # ======================================================
-
     if source_ip:
+        query += " AND source_ip LIKE ?"
+        parameters.append("%" + source_ip + "%")
 
-        query += """
-            AND source_ip LIKE ?
-        """
-
-        parameters.append(
-            "%" + source_ip + "%"
-        )
-
-
-    # ======================================================
     # Latest 50 Threats
-    # ======================================================
-
-    query += """
-        ORDER BY id DESC
-        LIMIT 50
-    """
-
+    query += " ORDER BY id DESC LIMIT 50"
 
     rows = cursor.execute(
-        query,
-        parameters
+        query, parameters
     ).fetchall()
-
 
     connection.close()
 
-
-    # ======================================================
-    # Convert Rows To JSON
-    # ======================================================
-
     threats_list = []
 
-
     for row in rows:
-
         threats_list.append({
-
-            "id":
-                row["id"],
-
-            "source_ip":
-                row["source_ip"],
-
-            "threat_type":
-                row["threat_type"],
-
-            "severity":
-                row["severity"],
-
-            "details":
-                row["details"],
-
-            "timestamp":
-                row["timestamp"]
-
+            "id": row["id"],
+            "source_ip": row["source_ip"],
+            "threat_type": row["threat_type"],
+            "severity": row["severity"],
+            "details": row["details"],
+            "timestamp": row["timestamp"]
         })
 
-
-    return jsonify(
-        threats_list
-    )
+    return jsonify(threats_list)
 
 
 # ==========================================================
@@ -313,17 +193,9 @@ def threats():
 
 @app.route("/api/threat/<int:threat_id>")
 def threat_details_api(threat_id):
-
     connection = sqlite3.connect(DATABASE)
-
     connection.row_factory = sqlite3.Row
-
     cursor = connection.cursor()
-
-
-    # ======================================================
-    # Find Threat By ID
-    # ======================================================
 
     threat = cursor.execute("""
         SELECT
@@ -335,52 +207,22 @@ def threat_details_api(threat_id):
             timestamp
         FROM threats
         WHERE id = ?
-    """, (
-        threat_id,
-    )).fetchone()
-
+    """, (threat_id,)).fetchone()
 
     connection.close()
 
-
-    # ======================================================
-    # Threat Not Found
-    # ======================================================
-
     if threat is None:
-
         return jsonify({
-
-            "error":
-                "Threat not found."
-
+            "error": "Threat not found."
         }), 404
 
-
-    # ======================================================
-    # Return Threat Details
-    # ======================================================
-
     return jsonify({
-
-        "id":
-            threat["id"],
-
-        "source_ip":
-            threat["source_ip"],
-
-        "threat_type":
-            threat["threat_type"],
-
-        "severity":
-            threat["severity"],
-
-        "details":
-            threat["details"],
-
-        "timestamp":
-            threat["timestamp"]
-
+        "id": threat["id"],
+        "source_ip": threat["source_ip"],
+        "threat_type": threat["threat_type"],
+        "severity": threat["severity"],
+        "details": threat["details"],
+        "timestamp": threat["timestamp"]
     })
 
 
@@ -390,17 +232,9 @@ def threat_details_api(threat_id):
 
 @app.route("/api/threat/<int:threat_id>/packets")
 def threat_packets(threat_id):
-
     connection = sqlite3.connect(DATABASE)
-
     connection.row_factory = sqlite3.Row
-
     cursor = connection.cursor()
-
-
-    # ======================================================
-    # Get Threat Information
-    # ======================================================
 
     threat = cursor.execute("""
         SELECT
@@ -412,38 +246,13 @@ def threat_packets(threat_id):
             timestamp
         FROM threats
         WHERE id = ?
-    """, (
-        threat_id,
-    )).fetchone()
-
-
-    # ======================================================
-    # Threat Not Found
-    # ======================================================
+    """, (threat_id,)).fetchone()
 
     if threat is None:
-
         connection.close()
-
         return jsonify({
-
-            "error":
-                "Threat not found."
-
+            "error": "Threat not found."
         }), 404
-
-
-    # ======================================================
-    # Get Related Packets
-    #
-    # Both threat and packet timestamps are stored
-    # using the same India Standard Time.
-    #
-    # Therefore, no timezone conversion is required.
-    #
-    # Search within 10 seconds before and after
-    # the threat detection time.
-    # ======================================================
 
     packets = cursor.execute("""
         SELECT
@@ -457,23 +266,11 @@ def threat_packets(threat_id):
             timestamp
         FROM packets
         WHERE source_ip = ?
-
         AND timestamp BETWEEN
-
-            datetime(
-                ?,
-                '-10 seconds'
-            )
-
+            datetime(?, '-10 seconds')
             AND
-
-            datetime(
-                ?,
-                '+10 seconds'
-            )
-
+            datetime(?, '+10 seconds')
         ORDER BY id DESC
-
         LIMIT 50
     """, (
         threat["source_ip"],
@@ -481,66 +278,27 @@ def threat_packets(threat_id):
         threat["timestamp"]
     )).fetchall()
 
-
     connection.close()
-
-
-    # ======================================================
-    # Convert Packets To JSON
-    # ======================================================
 
     packet_list = []
 
-
     for packet in packets:
-
         packet_list.append({
-
-            "source_ip":
-                packet["source_ip"],
-
-            "destination_ip":
-                packet["destination_ip"],
-
-            "protocol":
-                packet["protocol"],
-
-            "source_port":
-                packet["source_port"],
-
-            "destination_port":
-                packet["destination_port"],
-
-            "packet_size":
-                packet["packet_size"],
-
-            "tcp_flags":
-                packet["tcp_flags"],
-
-            "timestamp":
-                packet["timestamp"]
-
+            "source_ip": packet["source_ip"],
+            "destination_ip": packet["destination_ip"],
+            "protocol": packet["protocol"],
+            "source_port": packet["source_port"],
+            "destination_port": packet["destination_port"],
+            "packet_size": packet["packet_size"],
+            "tcp_flags": packet["tcp_flags"],
+            "timestamp": packet["timestamp"]
         })
 
-
-    # ======================================================
-    # Return Related Packets
-    # ======================================================
-
     return jsonify({
-
-        "threat_id":
-            threat["id"],
-
-        "source_ip":
-            threat["source_ip"],
-
-        "total":
-            len(packet_list),
-
-        "packets":
-            packet_list
-
+        "threat_id": threat["id"],
+        "source_ip": threat["source_ip"],
+        "total": len(packet_list),
+        "packets": packet_list
     })
 
 
@@ -550,26 +308,17 @@ def threat_packets(threat_id):
 
 @app.route("/api/threat-count")
 def threat_count():
-
     connection = sqlite3.connect(DATABASE)
-
     cursor = connection.cursor()
 
-
     total = cursor.execute("""
-        SELECT COUNT(*)
-        FROM threats
+        SELECT COUNT(*) FROM threats
     """).fetchone()[0]
-
 
     connection.close()
 
-
     return jsonify({
-
-        "total":
-            total
-
+        "total": total
     })
 
 
@@ -577,87 +326,40 @@ def threat_count():
 # Clear Threat Records API
 # ==========================================================
 
-@app.route(
-    "/api/clear-threats",
-    methods=["POST"]
-)
+@app.route("/api/clear-threats", methods=["POST"])
 def clear_threats():
-
     connection = sqlite3.connect(DATABASE)
-
     cursor = connection.cursor()
 
-
     try:
-
-        # ==================================================
-        # Get Current Threat Count
-        # ==================================================
-
         threat_count_before = cursor.execute("""
-            SELECT COUNT(*)
-            FROM threats
+            SELECT COUNT(*) FROM threats
         """).fetchone()[0]
 
-
-        # ==================================================
-        # Delete ONLY Threat Records
-        # ==================================================
-
-        cursor.execute("""
-            DELETE FROM threats
-        """)
-
-
+        # Delete only threat records
+        cursor.execute("DELETE FROM threats")
         connection.commit()
 
-
-        # ==================================================
-        # Confirm Remaining Threats
-        # ==================================================
-
         threat_count_after = cursor.execute("""
-            SELECT COUNT(*)
-            FROM threats
+            SELECT COUNT(*) FROM threats
         """).fetchone()[0]
 
-
         connection.close()
 
-
         return jsonify({
-
-            "success":
-                True,
-
-            "deleted":
-                threat_count_before,
-
-            "remaining":
-                threat_count_after,
-
-            "message":
-                "Threat records cleared successfully."
-
+            "success": True,
+            "deleted": threat_count_before,
+            "remaining": threat_count_after,
+            "message": "Threat records cleared successfully."
         })
 
-
     except Exception as error:
-
         connection.rollback()
-
         connection.close()
 
-
         return jsonify({
-
-            "success":
-                False,
-
-            "message":
-                "Failed to clear threat records: "
-                + str(error)
-
+            "success": False,
+            "message": "Failed to clear threat records: " + str(error)
         }), 500
 
 
@@ -667,13 +369,9 @@ def clear_threats():
 
 @app.route("/api/packets")
 def packets():
-
     connection = sqlite3.connect(DATABASE)
-
     connection.row_factory = sqlite3.Row
-
     cursor = connection.cursor()
-
 
     rows = cursor.execute("""
         SELECT
@@ -688,41 +386,21 @@ def packets():
         LIMIT 20
     """).fetchall()
 
-
     connection.close()
-
 
     packets_list = []
 
-
     for row in rows:
-
         packets_list.append({
-
-            "source_ip":
-                row["source_ip"],
-
-            "destination_ip":
-                row["destination_ip"],
-
-            "protocol":
-                row["protocol"],
-
-            "destination_port":
-                row["destination_port"],
-
-            "packet_size":
-                row["packet_size"],
-
-            "timestamp":
-                row["timestamp"]
-
+            "source_ip": row["source_ip"],
+            "destination_ip": row["destination_ip"],
+            "protocol": row["protocol"],
+            "destination_port": row["destination_port"],
+            "packet_size": row["packet_size"],
+            "timestamp": row["timestamp"]
         })
 
-
-    return jsonify(
-        packets_list
-    )
+    return jsonify(packets_list)
 
 
 # ==========================================================
@@ -731,43 +409,21 @@ def packets():
 
 @app.route("/api/report")
 def report():
-
     connection = sqlite3.connect(DATABASE)
-
     connection.row_factory = sqlite3.Row
-
     cursor = connection.cursor()
-
-
-    # ======================================================
-    # Total Packets
-    # ======================================================
 
     total_packets = cursor.execute(
         "SELECT COUNT(*) FROM packets"
     ).fetchone()[0]
 
-
-    # ======================================================
-    # Total Threats
-    # ======================================================
-
     total_threats = cursor.execute(
         "SELECT COUNT(*) FROM threats"
     ).fetchone()[0]
 
-
-    # ======================================================
-    # Monitored Packets
-    # ======================================================
-
     monitored_packets = total_packets
 
-
-    # ======================================================
     # Threat Summary
-    # ======================================================
-
     threat_types = cursor.execute("""
         SELECT
             threat_type,
@@ -776,27 +432,15 @@ def report():
         GROUP BY threat_type
     """).fetchall()
 
-
     threat_summary = []
 
-
     for row in threat_types:
-
         threat_summary.append({
-
-            "threat_type":
-                row["threat_type"],
-
-            "count":
-                row["count"]
-
+            "threat_type": row["threat_type"],
+            "count": row["count"]
         })
 
-
-    # ======================================================
     # Severity Summary
-    # ======================================================
-
     severity_types = cursor.execute("""
         SELECT
             severity,
@@ -805,30 +449,15 @@ def report():
         GROUP BY severity
     """).fetchall()
 
-
     severity_summary = []
 
-
     for row in severity_types:
-
         severity_summary.append({
-
-            "severity":
-                row["severity"],
-
-            "count":
-                row["count"]
-
+            "severity": row["severity"],
+            "count": row["count"]
         })
 
-
-    # ======================================================
     # Latest Threats
-    #
-    # Include threat ID so Reports page can open
-    # the Threat Details page.
-    # ======================================================
-
     latest_threats = cursor.execute("""
         SELECT
             id,
@@ -842,62 +471,27 @@ def report():
         LIMIT 10
     """).fetchall()
 
-
     recent_threats = []
 
-
     for row in latest_threats:
-
         recent_threats.append({
-
-            "id":
-                row["id"],
-
-            "source_ip":
-                row["source_ip"],
-
-            "threat_type":
-                row["threat_type"],
-
-            "severity":
-                row["severity"],
-
-            "details":
-                row["details"],
-
-            "timestamp":
-                row["timestamp"]
-
+            "id": row["id"],
+            "source_ip": row["source_ip"],
+            "threat_type": row["threat_type"],
+            "severity": row["severity"],
+            "details": row["details"],
+            "timestamp": row["timestamp"]
         })
-
 
     connection.close()
 
-
-    # ======================================================
-    # Return Report Data
-    # ======================================================
-
     return jsonify({
-
-        "total_packets":
-            total_packets,
-
-        "monitored_packets":
-            monitored_packets,
-
-        "total_threats":
-            total_threats,
-
-        "threat_summary":
-            threat_summary,
-
-        "severity_summary":
-            severity_summary,
-
-        "recent_threats":
-            recent_threats
-
+        "total_packets": total_packets,
+        "monitored_packets": monitored_packets,
+        "total_threats": total_threats,
+        "threat_summary": threat_summary,
+        "severity_summary": severity_summary,
+        "recent_threats": recent_threats
     })
 
 
@@ -906,4 +500,8 @@ def report():
 # ==========================================================
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(
+        host="0.0.0.0",
+        port=5000,
+        debug=True
+    )
